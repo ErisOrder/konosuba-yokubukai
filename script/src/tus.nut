@@ -255,11 +255,19 @@ class this.TUS extends this.NetworkModule
 		}
 
 		struct.clear();
-		return true;
-		  // [031]  OP_POPTRAP        1      0    0    0
-		  // [032]  OP_JMP            0      8    0    0
-		this.print("SAVEDATA IS BROKEN." + true + "\n");
-		return false;
+
+		try
+		{
+			struct.unserialize(ret);
+			this.print("RECV SUCCESS\n");
+			return true;
+			  // [031]  OP_POPTRAP        1      0    0    0
+		}
+		catch( e )
+		{
+			this.print("SAVEDATA IS BROKEN." + e + "\n");
+			return false;
+		}
 	}
 
 }

@@ -196,11 +196,39 @@ class this.Application extends this.SaveSystem
 				args.append(vargv[i]);
 			}
 
-			return func(args[0], args[1], args[2], args[3], args[4]);
-			  // [089]  OP_POPTRAP        1      0    0    0
-			  // [090]  OP_JMP            0     15    0    0
-			this.printf("%s:\x00e3\x0082\x00a8\x00e3\x0083\x00a9\x00e3\x0083\x00bc:%s\n", $[stack offset 1], "message" in args.len() ? args.len().message : args.len());
-			::printException(args.len());
+			try
+			{
+				switch(args.len())
+				{
+				case 0:
+					  // [021]  OP_POPTRAP        1      0    0    0
+					return func();
+
+				case 1:
+					  // [031]  OP_POPTRAP        1      0    0    0
+					return func(args[0]);
+
+				case 2:
+					  // [043]  OP_POPTRAP        1      0    0    0
+					return func(args[0], args[1]);
+
+				case 3:
+					  // [057]  OP_POPTRAP        1      0    0    0
+					return func(args[0], args[1], args[2]);
+
+				case 4:
+					  // [073]  OP_POPTRAP        1      0    0    0
+					return func(args[0], args[1], args[2], args[3]);
+				}
+
+				return func(args[0], args[1], args[2], args[3], args[4]);
+				  // [089]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+				this.printf("%s:\x00e3\x0082\x00a8\x00e3\x0083\x00a9\x00e3\x0083\x00bc:%s\n", $[stack offset 1], "message" in e ? e.message : e);
+				::printException(e);
+			}
 		}
 		else
 		{

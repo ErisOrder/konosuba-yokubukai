@@ -22,11 +22,16 @@ function getProperty( target, name )
 {
 	if (name.charAt(0) == "$")
 	{
-		return target.getVariable(name.substr(1));
-		  // [013]  OP_POPTRAP        1      0    0    0
-		  // [014]  OP_JMP            0      9    0    0
-		this.printf("\x00e5\x00a4\x0089\x00e6\x0095\x00b0\x00e5\x008f\x0096\x00e5\x00be\x0097\x00e5\x00a4\x00b1\x00e6\x0095\x0097:%s:%s:%s\n", $[stack offset 1], name, target.getVariable(name.substr(1)));
-		::printException(target.getVariable(name.substr(1)));
+		try
+		{
+			return target.getVariable(name.substr(1));
+			  // [013]  OP_POPTRAP        1      0    0    0
+		}
+		catch( e )
+		{
+			this.printf("\x00e5\x00a4\x0089\x00e6\x0095\x00b0\x00e5\x008f\x0096\x00e5\x00be\x0097\x00e5\x00a4\x00b1\x00e6\x0095\x0097:%s:%s:%s\n", target, name, e);
+			::printException(e);
+		}
 	}
 	else
 	{

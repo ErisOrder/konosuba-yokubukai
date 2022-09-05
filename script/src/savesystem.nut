@@ -21,11 +21,14 @@ class this.IdMap extends this.Object
 				id = id.tolower();
 			}
 
-			return this.map[id];
-			  // [019]  OP_POPTRAP        1      0    0    0
-		}
-		else
-		{
+			try
+			{
+				return this.map[id];
+				  // [019]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+			}
 		}
 
 		return -1;

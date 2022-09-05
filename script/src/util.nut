@@ -27,10 +27,23 @@ function exec( script, context = null, error = null )
 {
 	if (error != null)
 	{
-		return func();
-		  // [018]  OP_POPTRAP        1      0    0    0
-		  // [019]  OP_JMP            0      4    0    0
-		::printException($[stack offset 4]);
+		try
+		{
+			local func = this.compilestring(script);
+
+			if (context != null)
+			{
+				func = func.bindenv(context);
+			}
+
+			return func();
+			  // [018]  OP_POPTRAP        1      0    0    0
+		}
+		catch( e )
+		{
+			::printException(e);
+		}
+
 		return error;
 	}
 	else
@@ -53,11 +66,16 @@ function eval( eval, context = null, error = null )
 
 function tonumber( value )
 {
-	return value != null ? value.tonumber() : null;
-	  // [012]  OP_POPTRAP        1      0    0    0
-	  // [013]  OP_JMP            0      6    0    0
-	this.printf("warning:can\'t convert to number:%s\n", $[stack offset 1]);
-	return 0;
+	try
+	{
+		return value != null ? value.tonumber() : null;
+		  // [012]  OP_POPTRAP        1      0    0    0
+	}
+	catch( e )
+	{
+		this.printf("warning:can\'t convert to number:%s\n", value);
+		return 0;
+	}
 }
 
 function getval( table, name, def = null )
@@ -85,11 +103,16 @@ function getbool( table, name, def = null )
 				}
 			}
 
-			return value.tonumber() != 0;
-			  // [025]  OP_POPTRAP        1      0    0    0
-			  // [026]  OP_JMP            0     12    0    0
-			::printException(value.tonumber() != 0);
-			return def != null ? def : false;
+			try
+			{
+				return value.tonumber() != 0;
+				  // [025]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+				::printException(e);
+				return def != null ? def : false;
+			}
 		}
 	}
 
@@ -116,11 +139,16 @@ function getint( table, name, def = null )
 				}
 			}
 
-			return value.tointeger();
-			  // [023]  OP_POPTRAP        1      0    0    0
-			  // [024]  OP_JMP            0     12    0    0
-			::printException(value.tointeger());
-			return def != null ? def : 0;
+			try
+			{
+				return value.tointeger();
+				  // [023]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+				::printException(e);
+				return def != null ? def : 0;
+			}
 		}
 	}
 
@@ -148,11 +176,16 @@ function toint( value, def = 0 )
 		}
 	}
 
-	return value.tointeger();
-	  // [022]  OP_POPTRAP        1      0    0    0
-	  // [023]  OP_JMP            0     12    0    0
-	this.printf("warning:can\'t convert to int:%s\n", $[stack offset 1]);
-	return def != null ? def : 0;
+	try
+	{
+		return value.tointeger();
+		  // [022]  OP_POPTRAP        1      0    0    0
+	}
+	catch( e )
+	{
+		this.printf("warning:can\'t convert to int:%s\n", value);
+		return def != null ? def : 0;
+	}
 }
 
 function getfloat( table, name, def = 0 )
@@ -163,11 +196,16 @@ function getfloat( table, name, def = 0 )
 
 		if (value != null)
 		{
-			return value.tofloat();
-			  // [011]  OP_POPTRAP        1      0    0    0
-			  // [012]  OP_JMP            0     12    0    0
-			::printException(value.tofloat());
-			return def != null ? def : 0;
+			try
+			{
+				return value.tofloat();
+				  // [011]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+				::printException(e);
+				return def != null ? def : 0;
+			}
 		}
 	}
 
@@ -181,11 +219,16 @@ function tofloat( value, def = 0 )
 		return def;
 	}
 
-	return value.tofloat();
-	  // [009]  OP_POPTRAP        1      0    0    0
-	  // [010]  OP_JMP            0     12    0    0
-	::printException(value.tofloat());
-	return def != null ? def : 0;
+	try
+	{
+		return value.tofloat();
+		  // [009]  OP_POPTRAP        1      0    0    0
+	}
+	catch( e )
+	{
+		::printException(e);
+		return def != null ? def : 0;
+	}
 }
 
 function random( a )

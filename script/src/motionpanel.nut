@@ -3577,11 +3577,16 @@ class this.MotionPanel extends ::BasePicture
 				args.append(vargv[i]);
 			}
 
-			return this._execFunc(func, args);
-			  // [022]  OP_POPTRAP        1      0    0    0
-			  // [023]  OP_JMP            0     15    0    0
-			this.printf("%s:\x00e3\x0083\x00a2\x00e3\x0083\x00bc\x00e3\x0082\x00b7\x00e3\x0083\x00a7\x00e3\x0083\x00b3\x00e6\x0083\x0085\x00e5\x00a0\x00b1\x00e9\x0096\x00a2\x00e6\x0095\x00b0\x00e5\x0091\x00bc\x00e3\x0081\x00b3\x00e5\x0087\x00ba\x00e3\x0081\x0097\x00e4\x00b8\x00ad\x00e3\x0081\x00ab\x00e4\x00be\x008b\x00e5\x00a4\x0096:%s\n", $[stack offset 1], "message" in this._execFunc(func, args) ? this._execFunc(func, args).message : this._execFunc(func, args));
-			::printException(this._execFunc(func, args));
+			try
+			{
+				return this._execFunc(func, args);
+				  // [022]  OP_POPTRAP        1      0    0    0
+			}
+			catch( e )
+			{
+				this.printf("%s:\x00e3\x0083\x00a2\x00e3\x0083\x00bc\x00e3\x0082\x00b7\x00e3\x0083\x00a7\x00e3\x0083\x00b3\x00e6\x0083\x0085\x00e5\x00a0\x00b1\x00e9\x0096\x00a2\x00e6\x0095\x00b0\x00e5\x0091\x00bc\x00e3\x0081\x00b3\x00e5\x0087\x00ba\x00e3\x0081\x0097\x00e4\x00b8\x00ad\x00e3\x0081\x00ab\x00e4\x00be\x008b\x00e5\x00a4\x0096:%s\n", funcName, "message" in e ? e.message : e);
+				::printException(e);
+			}
 		}
 	}
 
