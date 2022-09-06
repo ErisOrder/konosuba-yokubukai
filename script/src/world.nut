@@ -1455,7 +1455,7 @@ class this.EnvLayerObject extends this.EnvObject
 
 			if ("class" in elm)
 			{
-				local classInfo = this.player.getClassInfo(elm.class);
+				local classInfo = this.player.getClassInfo(elm["class"]);
 				this.targetLayer.cameraMode = this.cameraMode = classInfo.cameraMode;
 				this.targetLayer.absoluteBase = ::getint(classInfo, "absoluteBase", 0);
 			}
