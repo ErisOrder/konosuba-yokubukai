@@ -1,43 +1,43 @@
 state | module        | note                                                          | note
------ | ------------- | ------------------------------------------------------------- | ----------
-+     | action        |                                                               |
-+     | application   |                                                               |
-+     | baselayer     |                                                               |
-+     | basepicture   |                                                               |
-+     | basiclayer    |                                                               |
-+     | basicpicture  |                                                               |
-+     | basicrender   |                                                               |
-+     | basictext     |                                                               |
-+     | confirmdialog |                                                               |
-+     | debug         | might need fixes                                              |
-+     | dmmauth       |                                                               |
-+     | doublepicture |                                                               |
-+     | envenv        |                                                               |
--     | envplayer     | cannot load game                                              | window stuck
-+     | envsystem     |                                                               |
--     | exception     | cannot skip intro?(no)                                        | game crash right after it
-+     | fontinfo      |                                                               |
-+     | gestureinfo   |                                                               |
-+     | include       |                                                               |
-+     | init          |                                                               |
--     | main          | black screen                                                  |
-+     | minigame      |                                                               |
-+     | motionpanel   |                                                               |
-+     | override      |                                                               |
+ ---- | ------------- | ------------------------------------------------------------- | ----------
+ok    | action        |                                                               |
+ok    | application   |                                                               |
+ok    | baselayer     |                                                               |
+ok    | basepicture   |                                                               |
+ok    | basiclayer    |                                                               |
+ok    | basicpicture  |                                                               |
+ok    | basicrender   |                                                               |
+ok    | basictext     |                                                               |
+ok    | confirmdialog |                                                               |
+ok    | debug         | might need fixes                                              |
+ok    | dmmauth       |                                                               |
+ok    | doublepicture |                                                               |
+ok    | envenv        |                                                               |
+bad   | envplayer     | cannot load game                                              | window stuck
+ok    | envsystem     |                                                               |
+bad   | exception     | cannot skip intro?(no)                                        | game crash right after it
+ok    | fontinfo      |                                                               |
+ok    | gestureinfo   |                                                               |
+ok    | include       |                                                               |
+ok    | init          |                                                               |
+bad   | main          | black screen                                                  |
+ok    | minigame      |                                                               |
+ok    | motionpanel   |                                                               |
+ok    | override      |                                                               |
 ?     | savesystem    | script certainly broken in error-handling section             | intro video skipped
-+     | selectdialog  |                                                               |
-+     | sound         |                                                               |
-+     | spec          |                                                               |
-+     | spec_ps3      |                                                               |
-+     | spec_ps4      |                                                               |
-+     | spec_psp      |                                                               |
-+     | spec_vita     |                                                               |
-+     | spec_win      |                                                               |
-+     | spec_360      |                                                               |
-+     | startup       |                                                               |
-+     | system        |                                                               |
-+     | text          |                                                               |
-+     | title         |                                                               |
-+     | tus           |                                                               |
--     | util          | no ingame art and sprites including galleries and thumbs      |
-+     | world         |                                                               |
+ok    | selectdialog  |                                                               |
+ok    | sound         |                                                               |
+ok    | spec          |                                                               |
+ok    | spec_ps3      |                                                               |
+ok    | spec_ps4      |                                                               |
+ok    | spec_psp      |                                                               |
+ok    | spec_vita     |                                                               |
+ok    | spec_win      |                                                               |
+ok    | spec_360      |                                                               |
+ok    | startup       |                                                               |
+ok    | system        |                                                               |
+ok    | text          |                                                               |
+ok    | title         |                                                               |
+ok    | tus           |                                                               |
+bad   | util          | no ingame art and sprites including galleries and thumbs      |
+ok    | world         |                                                               |
