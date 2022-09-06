@@ -675,7 +675,6 @@ function loadImageData( storage )
 					data = null;
 				}
 
-				  // [069]  OP_POPTRAP        1      0    0    0
 				return data;
 			}
 			else
@@ -691,28 +690,25 @@ function loadImageData( storage )
 					s = storage;
 				}
 
-				  // [087]  OP_POPTRAP        1      0    0    0
 				return this.loadData("motion/" + s);
 			}
 
 			break;
 
 		default:
-			l = $[stack offset 1].find(".imginfo");
+			l = storage.find(".imginfo");
 
 			if (l > 0)
 			{
-				local base = $[stack offset 1].substr(0, l);
-				  // [116]  OP_POPTRAP        1      0    0    0
+				local base = storage.substr(0, l);
 				return {
 					data = this.loadData("image/" + base + ".psb"),
-					info = this.loadData("image/" + $[stack offset 1])
+					info = this.loadData("image/" + storage)
 				};
 			}
 			else
 			{
-				  // [125]  OP_POPTRAP        1      0    0    0
-				return this.loadData("image/" + $[stack offset 1] + ".psb");
+				return this.loadData("image/" + storage + ".psb");
 			}
 
 			break;
@@ -721,7 +717,7 @@ function loadImageData( storage )
 	catch( e )
 	{
 		local message = (e instanceof this.Exception) ? e.message : e;
-		this.printf("failed to load image:%s:%s\n", $[stack offset 1], message);
+		this.printf("failed to load image:%s:%s\n", storage, message);
 	}
 
 	return null;

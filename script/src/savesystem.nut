@@ -700,15 +700,13 @@ class this.SaveSystem extends this.Object
 		{
 			if (typeof this.config[name] == "bool")
 			{
-				  // [018]  OP_POPTRAP        1      0    0    0
 				return this.config[name] ? 1 : 0;
 			}
 
-			local ret = this.config[$[stack offset 1]];
+			local ret = this.config[name];
 
 			if (ret != null)
 			{
-				  // [025]  OP_POPTRAP        1      0    0    0
 				return ret;
 			}
 		}
@@ -716,7 +714,7 @@ class this.SaveSystem extends this.Object
 		{
 			if (def == null)
 			{
-				this.printf("\x00e6\x008c\x0087\x00e5\x00ae\x009a\x00e3\x0081\x0097\x00e3\x0081\x009f\x00e3\x0082\x00b3\x00e3\x0083\x00b3\x00e3\x0083\x0095\x00e3\x0082\x00a3\x00e3\x0082\x00b0\x00e5\x0090\x008d\x00e3\x0081\x008c\x00e3\x0081\x0082\x00e3\x0082\x008a\x00e3\x0081\x00be\x00e3\x0081\x009b\x00e3\x0082\x0093:%s\n", $[stack offset 1]);
+				this.printf("\x00e6\x008c\x0087\x00e5\x00ae\x009a\x00e3\x0081\x0097\x00e3\x0081\x009f\x00e3\x0082\x00b3\x00e3\x0083\x00b3\x00e3\x0083\x0095\x00e3\x0082\x00a3\x00e3\x0082\x00b0\x00e5\x0090\x008d\x00e3\x0081\x008c\x00e3\x0081\x0082\x00e3\x0082\x008a\x00e3\x0081\x00be\x00e3\x0081\x009b\x00e3\x0082\x0093:%s\n", name);
 			}
 		}
 

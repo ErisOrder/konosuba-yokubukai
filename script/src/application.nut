@@ -201,23 +201,18 @@ class this.Application extends this.SaveSystem
 				switch(args.len())
 				{
 				case 0:
-					  // [021]  OP_POPTRAP        1      0    0    0
 					return func();
 
 				case 1:
-					  // [031]  OP_POPTRAP        1      0    0    0
 					return func(args[0]);
 
 				case 2:
-					  // [043]  OP_POPTRAP        1      0    0    0
 					return func(args[0], args[1]);
 
 				case 3:
-					  // [057]  OP_POPTRAP        1      0    0    0
 					return func(args[0], args[1], args[2]);
 
 				case 4:
-					  // [073]  OP_POPTRAP        1      0    0    0
 					return func(args[0], args[1], args[2], args[3]);
 				}
 
@@ -226,7 +221,7 @@ class this.Application extends this.SaveSystem
 			}
 			catch( e )
 			{
-				this.printf("%s:\x00e3\x0082\x00a8\x00e3\x0083\x00a9\x00e3\x0083\x00bc:%s\n", $[stack offset 1], "message" in e ? e.message : e);
+				this.printf("%s:\x00e3\x0082\x00a8\x00e3\x0083\x00a9\x00e3\x0083\x00bc:%s\n", funcname, "message" in e ? e.message : e);
 				::printException(e);
 			}
 		}

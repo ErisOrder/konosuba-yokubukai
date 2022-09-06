@@ -1334,12 +1334,10 @@ class this.MotionValueInfo
 			{
 				if (arg != null)
 				{
-					  // [015]  OP_POPTRAP        1      0    0    0
 					return this.fixBool(this.owner.execFunc(this.getfunc, this, arg));
 				}
 				else
 				{
-					  // [025]  OP_POPTRAP        1      0    0    0
 					return this.fixBool(this.owner.execFunc(this.getfunc, this));
 				}
 			}
@@ -1357,12 +1355,10 @@ class this.MotionValueInfo
 				{
 					if (this.valuename.charAt(0) == "!")
 					{
-						  // [074]  OP_POPTRAP        1      0    0    0
 						return this.owner.eval(this.valuename.substr(1)) ? 0 : 1;
 					}
 					else
 					{
-						  // [083]  OP_POPTRAP        1      0    0    0
 						return this.fixBool(this.owner.eval(this.valuename));
 					}
 				}
@@ -3028,18 +3024,16 @@ class this.MotionPanel extends ::BasePicture
 
 			if (typeof cond == "function")
 			{
-				  // [013]  OP_POPTRAP        1      0    0    0
 				return cond(this);
 			}
 			else
 			{
-				  // [016]  OP_POPTRAP        1      0    0    0
 				return cond;
 			}
 		}
 		catch( e )
 		{
-			this.printf("%s:\x00e3\x0083\x009c\x00e3\x0082\x00bf\x00e3\x0083\x00b3\x00e8\x00a9\x0095\x00e4\x00be\x00a1\x00e5\x0087\x00a6\x00e7\x0090\x0086\x00e3\x0081\x00a7\x00e4\x00be\x008b\x00e5\x00a4\x0096:%s:%s\n", $[stack offset 1], cond, "message" in e ? e.message : e);
+			this.printf("%s:\x00e3\x0083\x009c\x00e3\x0082\x00bf\x00e3\x0083\x00b3\x00e8\x00a9\x0095\x00e4\x00be\x00a1\x00e5\x0087\x00a6\x00e7\x0090\x0086\x00e3\x0081\x00a7\x00e4\x00be\x008b\x00e5\x00a4\x0096:%s:%s\n", name, cond, "message" in e ? e.message : e);
 		}
 
 		return false;
