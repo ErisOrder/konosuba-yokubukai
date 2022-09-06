@@ -16,9 +16,12 @@ parser_make.add_argument("-x", action="store_true", help="make scripts")
 parser_make.add_argument("-d", action="store_true", help="make data")
 parser_make.add_argument("-t", action="store_true", help="do not delete tmp folder")
 
-parser_script = subparsers.add_parser("script", help="compare scripts")
-parser_script.add_argument("--cmp", type=str, help="module: compile and decompile and compare with src")
-parser_script.add_argument("--bincmp", type=str, help="module: compile and compare with original binary")
+parser_script = subparsers.add_parser("script", help="disassemble and compare scripts")
+parser_script.add_argument("module", type=str, help="script module in script/src")
+parser_script.add_argument("--cmp", action="store_true", help="compile and decompile and compare with src")
+parser_script.add_argument("--bincmp", action="store_true", help="compile and compare with original binary")
+parser_script.add_argument("-d", type=str, help="function: disassemble")
+parser_script.add_argument("-r", action="store_true", help="function disassemble: show recompiled")
 
 parser_man = subparsers.add_parser("man", help="data manipulation")
 man_subparsers = parser_man.add_subparsers()
@@ -151,7 +154,7 @@ def compile_scripts():
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
 
-def compare_scripts(module, binary):
+def recompile_script(module, binary, compare):
     tmp_path = f"{TMP_ROOT}/cmp"
     ensure_path(tmp_path)
     original_path = f"{SCRIPTS_ORIG}/{module}.nut.m"
@@ -163,6 +166,9 @@ def compare_scripts(module, binary):
 
     compiled_path = f"{tmp_path}/{module}.nut.m"
     compile_script(src_path, compiled_path)
+
+    if not compare:
+        return compiled_path
 
     if binary:
         run_single(NUTCRACKER_PATH, "-cmp", original_path, compiled_path)
@@ -193,14 +199,21 @@ def make_main(args):
 
 def script_main(args):
 
+    if args.d:
+        if args.r:
+            path = recompile_script(args.module, True, False)
+        else:
+            path = f"{SCRIPTS_ORIG}/{args.module}.nut.m"
+        run_single(NUTCRACKER_PATH, "-d", args.d, path)
+        return
+
     if args.bincmp:
-        compare_scripts(args.bincmp, True)
+        recompile_script(args.module, True, True)
         return
 
     if args.cmp:
-        compare_scripts(args.cmp, False)
+        recompile_script(args.module, False, True)
         return
-
 
 def man_script_main(args):
 
