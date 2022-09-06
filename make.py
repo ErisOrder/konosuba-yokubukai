@@ -16,13 +16,9 @@ parser_make.add_argument("-x", action="store_true", help="make scripts")
 parser_make.add_argument("-d", action="store_true", help="make data")
 parser_make.add_argument("-t", action="store_true", help="do not delete tmp folder")
 
-parser_script = subparsers.add_parser("script", help="compile/decompile scripts")
-parser_script.add_argument("input_dir", type=str, help="input source or binary folder")
-parser_script.add_argument("output_dir", type=str, help="output source or binary folder")
-parser_script.add_argument("-c", action="store_true", help="compile scripts")
-parser_script.add_argument("-d", action="store_true", help="decompile scripts")
-parser_script.add_argument("-r", type=str, help="folder for redecompiled scripts (-cd for roundtrip)")
-
+parser_script = subparsers.add_parser("script", help="compare scripts")
+parser_script.add_argument("--cmp", type=str, help="module: compile and decompile and compare with src")
+parser_script.add_argument("--bincmp", type=str, help="module: compile and compare with original binary")
 
 parser_man = subparsers.add_parser("man", help="data manipulation")
 man_subparsers = parser_man.add_subparsers()
@@ -32,6 +28,13 @@ parser_psb.add_argument("input", type=str, help="input json or binary")
 parser_psb.add_argument("output", type=str, help="output folder or binary")
 parser_psb.add_argument("-c", action="store_true", help="compile (build)")
 parser_psb.add_argument("-d", action="store_true", help="decompile (build)")
+
+parser_man_script = man_subparsers.add_parser("script", help="manipulate scripts")
+parser_man_script.add_argument("input_dir", type=str, help="input source or binary folder")
+parser_man_script.add_argument("output_dir", type=str, help="output source or binary folder")
+parser_man_script.add_argument("-c", action="store_true", help="compile scripts")
+parser_man_script.add_argument("-d", action="store_true", help="decompile scripts")
+parser_man_script.add_argument("-r", type=str, help="folder for redecompiled scripts (-cd for roundtrip)")
 
 # config
 PSB_KEY = "38757621acf82"
@@ -47,8 +50,9 @@ FILES_ROOT = f"{BUILD_ROOT}/windata"
 
 CACHE_FILE = f"{BUILD_ROOT}/cache.json"
 
-SCRIPTS_SRC = f"script/src"
-SCRIPT_JSON = f"script/psb-json"
+SCRIPTS_ORIG = "script/original"
+SCRIPTS_SRC = "script/src"
+SCRIPT_JSON = "script/psb-json"
 
 
 hash_store: HashStorage
@@ -147,6 +151,28 @@ def compile_scripts():
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
 
+def compare_scripts(module, binary):
+    tmp_path = f"{TMP_ROOT}/cmp"
+    ensure_path(tmp_path)
+    original_path = f"{SCRIPTS_ORIG}/{module}.nut.m"
+    src_path = f"{SCRIPTS_SRC}/{module}.nut"
+
+    if not os.path.exists(original_path) or not os.path.exists(src_path):
+        print("no such module")
+        return
+
+    compiled_path = f"{tmp_path}/{module}.nut.m"
+    compile_script(src_path, compiled_path)
+
+    if binary:
+        run_single(NUTCRACKER_PATH, "-cmp", original_path, compiled_path)
+        return
+
+    redecompiled_path = f"{tmp_path}/{module}.nut"
+    decompile_script(compiled_path, redecompiled_path)
+    run_single("git", "diff", "--no-index", "--", src_path, redecompiled_path)
+
+
 def make_main(args):
     global hash_store
 
@@ -166,6 +192,17 @@ def make_main(args):
 
 
 def script_main(args):
+
+    if args.bincmp:
+        compare_scripts(args.bincmp, True)
+        return
+
+    if args.cmp:
+        compare_scripts(args.cmp, False)
+        return
+
+
+def man_script_main(args):
 
     if args.c and args.d and not args.r:
         print("please specify folder for redecompiled scripts with -r <dir>")
@@ -210,6 +247,7 @@ def psb_main(args):
 if __name__ == "__main__":
     parser_make.set_defaults(func=make_main)
     parser_script.set_defaults(func=script_main)
+    parser_man_script.set_defaults(func=man_script_main)
     parser_psb.set_defaults(func=psb_main)
     argss = parser.parse_args()
     if "func" not in argss:

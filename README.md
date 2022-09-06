@@ -25,8 +25,15 @@ PSB decompiling:
 ## Script
 Script compiling:
 
-    python make.py script -c <src.nut> <out.nut.m>
+    python make.py man script -c <src.nut> <out.nut.m>
 
 Script decompiling:
 
-    python make.py script -d <bin.nut.m> <src.nut>
+    python make.py man script -d <bin.nut.m> <src.nut>
+
+Script compare:
+
+    python make.py script --cmp <module>
+    python make.py script --bincmp <module>
+
+`--cmp` requires installed git
