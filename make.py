@@ -122,6 +122,7 @@ def compile_scripts(whitelist: list[str]):
     print("compiling scripts...")
     tmp_path = f"{TMP_ROOT}/scripts"
     ensure_path(f"{tmp_path}/script")
+    ensure_path(f"{tmp_path}/custom")
     changed = False
     for script_file in os.listdir(SCRIPTS_SRC):
         orig_path = f"{SCRIPTS_ORIG}/{script_file}.m"
@@ -130,7 +131,11 @@ def compile_scripts(whitelist: list[str]):
 
         if script_file.split(".")[0] in whitelist:
             if hash_store.check_changed(src_path) or hash_store.check_changed(out_path):
-                compile_script(src_path, out_path)
+                tmp_path_custom = f"{tmp_path}/custom/{script_file}"
+                data = f'this.printf("custom {script_file} loaded\\n");\n' + open(src_path).read()
+                with open(tmp_path_custom, 'w') as tmpfile:
+                    tmpfile.write(data)
+                compile_script(tmp_path_custom, out_path)
                 hash_store.update_file(src_path)
                 changed = True
         else:
