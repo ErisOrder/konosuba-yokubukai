@@ -226,7 +226,7 @@ def script_main(args):
         path, _ = recompile_script(args.module, True)
     else:
         path = f"{SCRIPTS_ORIG}/{args.module}.nut.m"
-    decompile_fun(path, args.d)
+    decompile_fun(path, args.function_name)
     return
 
 

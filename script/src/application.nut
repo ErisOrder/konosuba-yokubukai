@@ -999,23 +999,25 @@ class this.Application extends this.SaveSystem
 	function _showDebugInfo()
 	{
 		local text = this.createDebugText(::DEBUG_FONTSIZE);
-		local t = "";
 
-		if (this.player != null)
-		{
-			local n = this.player.getDebugInfo();
-
-			if (n != null && n != "")
+		//seems like infinite loop...
+		for(;;) {
+			local t = "";
+			if (this.player != null)
 			{
-				t += n;
-				t += "\n";
-			}
-		}
+				local n = this.player.getDebugInfo();
 
-		t += this.getDebugInfo();
-		text.print(t, this.debugInfoPosition);
-		::wait();
-		  // [031]  OP_JMP            0    -28    0    0
+				if (n != null && n != "")
+				{
+					t += n;
+					t += "\n";
+				}
+			}
+
+			t += this.getDebugInfo();
+			text.print(t, this.debugInfoPosition);
+			::wait();
+		}
 	}
 
 	function doneDebugInfo()

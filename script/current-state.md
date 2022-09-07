@@ -1,3 +1,34 @@
+# Script information 
+Ingame keycodes
+
+bit | code    | kb key 
+--- | ------- | ----
+0   | 1       | X
+1   | 2       | Z, Enter
+2   | 4       |
+3   | 8       |
+4   | 16      | Right
+5   | 32      | Left
+6   | 64      | Up
+7   | 128     | Down
+8   | 256     | E 
+9   | 512     | Q
+10  | 1024    | C, 1
+11  | 2048    |
+12  | 4096    |
+13  | 8192    |
+14  | 16384   |
+15  | 32768   |
+16  | 65536   |
+17  | 131072  |
+
+`q+e` to open debug menu
+
+
+
+
+Script recompilation state
+
 state | module        | note                                                          | note
  ---- | ------------- | ------------------------------------------------------------- | ----------
 ok    | action        |                                                               |

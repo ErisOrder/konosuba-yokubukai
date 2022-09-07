@@ -498,7 +498,7 @@ else
 	this.defaultFont.entryFont("textfont8");
 }
 
-if (0 || ::System.getDebugBuild())
+if (true)
 {
 	this.system("script/debug.nut");
 }
@@ -510,7 +510,7 @@ else
 
 	function checkDebug( input )
 	{
-		return false;
+		return true;
 	}
 
 }

@@ -21,7 +21,9 @@ SCRIPTS_WHITELIST = [
 ]
 
 SCRIPTS_TEST_WHITELIST = [
-    "main"
+    # "main",
+    "init",
+    "debug",
 ]
 
 SCRIPTS_WORKING = [

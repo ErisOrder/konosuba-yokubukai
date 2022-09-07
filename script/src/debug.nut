@@ -431,7 +431,7 @@ class this.VariableEditWindow extends this.DialogWindow
 
 }
 
-class this.SystemVariableProxy 
+class this.SystemVariableProxy
 {
 	player = null;
 	constructor( player )
@@ -464,7 +464,7 @@ function addGlobalVariable( name )
 	::globalVariableNames.append(name);
 }
 
-class this.GlobalVariableProxy 
+class this.GlobalVariableProxy
 {
 	constructor()
 	{
@@ -610,6 +610,7 @@ function debugMenu( target, sel )
 this.DEBUGOPENKEY <- 512 | 256;
 function openDebugMenu()
 {
+	this.debugMenu();
 }
 
 function checkDebug( input )
