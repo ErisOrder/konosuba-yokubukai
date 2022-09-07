@@ -33,7 +33,7 @@ ok    | spec_ps4      |                                                         
 ok    | spec_psp      |                                                               |
 ok    | spec_vita     |                                                               |
 ok    | spec_win      |                                                               |
-ok    | spec_360      |                                                               |
+ok    | spec_x360     |                                                               |
 ok    | startup       |                                                               |
 ok    | system        |                                                               |
 ok    | text          |                                                               |

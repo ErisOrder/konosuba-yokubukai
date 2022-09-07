@@ -5,6 +5,7 @@ import argparse
 
 from common.process import run_single
 from common.cache import HashStorage
+from config import *
 
 # argparse
 parser = argparse.ArgumentParser()
@@ -13,6 +14,8 @@ subparsers = parser.add_subparsers()
 parser_make = subparsers.add_parser("make", help="build mod")
 parser_make.add_argument("-c", action="store_true", help="force clean")
 parser_make.add_argument("-x", action="store_true", help="make scripts")
+parser_make.add_argument("-T", action="store_true", help="make test whitelist scripts from source")
+parser_make.add_argument("-A", action="store_true", help="make all working scripts from source")
 parser_make.add_argument("-d", action="store_true", help="make data")
 parser_make.add_argument("-t", action="store_true", help="do not delete tmp folder")
 
@@ -38,24 +41,6 @@ parser_man_script.add_argument("output", type=str, help="output source or binary
 parser_man_script.add_argument("-c", action="store_true", help="compile script")
 parser_man_script.add_argument("-d", action="store_true", help="decompile script")
 parser_man_script.add_argument("-r", type=str, help="filename for redecompiled script (-cd for roundtrip)")
-
-# config
-PSB_KEY = "38757621acf82"
-
-NUTCRACKER_PATH = "tools/nutcracker.exe"
-SQ_PATH = "tools/sq.exe"
-PSB_DECOMPILE_PATH = "tools/FreeMoteToolkit/PsbDecompile.exe"
-PSB_BUILD_PATH = "tools/FreeMoteToolkit/PsBuild.exe"
-
-BUILD_ROOT = "build"
-TMP_ROOT = f"{BUILD_ROOT}/tmp"
-FILES_ROOT = f"{BUILD_ROOT}/windata"
-
-CACHE_FILE = f"{BUILD_ROOT}/cache.json"
-
-SCRIPTS_ORIG = "script/original"
-SCRIPTS_SRC = "script/src"
-SCRIPT_JSON = "script/psb-json"
 
 
 hash_store: HashStorage
@@ -133,19 +118,31 @@ def decompile_script(src, dst):
         print(f"failed to decompile {src}")
 
 
-def compile_scripts():
+def compile_scripts(whitelist: list[str]):
     print("compiling scripts...")
     tmp_path = f"{TMP_ROOT}/scripts"
     ensure_path(f"{tmp_path}/script")
     changed = False
     for script_file in os.listdir(SCRIPTS_SRC):
+        orig_path = f"{SCRIPTS_ORIG}/{script_file}.m"
         src_path = f"{SCRIPTS_SRC}/{script_file}"
         out_path = f"{tmp_path}/script/{script_file}.m"
-        if hash_store.check_changed(src_path) or not os.path.exists(out_path):
-            compile_script(src_path, out_path)
-            hash_store.update_file(src_path)
-            changed = True
+
+        if script_file.split(".")[0] in whitelist:
+            if hash_store.check_changed(src_path) or hash_store.check_changed(out_path):
+                compile_script(src_path, out_path)
+                hash_store.update_file(src_path)
+                changed = True
+        else:
+            if hash_store.check_changed(orig_path) or hash_store.check_changed(out_path):
+                print(f"copying {script_file}.m from original folder")
+                shutil.copy(orig_path, out_path)
+                hash_store.update_file(orig_path)
+                changed = True
+        hash_store.update_file(out_path)
+
     hash_store.save()
+
     if changed:
         ensure_path(FILES_ROOT)
         info_json = "script_info.psb.m.json"
@@ -196,7 +193,12 @@ def make_main(args):
     hash_store = HashStorage(CACHE_FILE)
 
     if args.x:
-        compile_scripts()
+        whitelist = SCRIPTS_WHITELIST
+        if args.T:
+            whitelist = SCRIPTS_TEST_WHITELIST
+        if args.A:
+            whitelist = SCRIPTS_WORKING
+        compile_scripts(whitelist)
 
     hash_store.save()
 
