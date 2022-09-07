@@ -33,7 +33,7 @@ Script decompiling:
 
 Script compare:
 
-    python make.py script --cmp <module>
-    python make.py script --bincmp <module>
+    python make.py script --cmp <module> <function>
+    python make.py script --bincmp <module> <function>
 
-`--cmp` requires installed git
+compare requires installed git

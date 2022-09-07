@@ -18,10 +18,10 @@ parser_make.add_argument("-t", action="store_true", help="do not delete tmp fold
 
 parser_script = subparsers.add_parser("script", help="disassemble and compare scripts")
 parser_script.add_argument("module", type=str, help="script module in script/src")
+parser_script.add_argument("function_name", type=str, help="function to disassemble ('main' for whole file)")
 parser_script.add_argument("--cmp", action="store_true", help="compile and decompile and compare with src")
 parser_script.add_argument("--bincmp", action="store_true", help="compile and compare with original binary")
-parser_script.add_argument("-d", type=str, help="function: disassemble")
-parser_script.add_argument("-r", action="store_true", help="function disassemble: show recompiled")
+parser_script.add_argument("-r", action="store_true", help="show redecompiled output")
 
 parser_man = subparsers.add_parser("man", help="data manipulation")
 man_subparsers = parser_man.add_subparsers()
@@ -33,11 +33,11 @@ parser_psb.add_argument("-c", action="store_true", help="compile (build)")
 parser_psb.add_argument("-d", action="store_true", help="decompile (build)")
 
 parser_man_script = man_subparsers.add_parser("script", help="manipulate scripts")
-parser_man_script.add_argument("input_dir", type=str, help="input source or binary folder")
-parser_man_script.add_argument("output_dir", type=str, help="output source or binary folder")
-parser_man_script.add_argument("-c", action="store_true", help="compile scripts")
-parser_man_script.add_argument("-d", action="store_true", help="decompile scripts")
-parser_man_script.add_argument("-r", type=str, help="folder for redecompiled scripts (-cd for roundtrip)")
+parser_man_script.add_argument("input", type=str, help="input source or binary file")
+parser_man_script.add_argument("output", type=str, help="output source or binary file")
+parser_man_script.add_argument("-c", action="store_true", help="compile script")
+parser_man_script.add_argument("-d", action="store_true", help="decompile script")
+parser_man_script.add_argument("-r", type=str, help="filename for redecompiled script (-cd for roundtrip)")
 
 # config
 PSB_KEY = "38757621acf82"
@@ -154,7 +154,14 @@ def compile_scripts():
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
 
-def recompile_script(module, binary, compare):
+def decompile_fun(binary_path, func, out=None):
+    if out:
+        run_single(NUTCRACKER_PATH, "-d", func, "-o", out, binary_path)
+    else:
+        run_single(NUTCRACKER_PATH, "-d", func, binary_path)
+
+
+def recompile_script(module, binary):
     tmp_path = f"{TMP_ROOT}/cmp"
     ensure_path(tmp_path)
     original_path = f"{SCRIPTS_ORIG}/{module}.nut.m"
@@ -167,16 +174,16 @@ def recompile_script(module, binary, compare):
     compiled_path = f"{tmp_path}/{module}.nut.m"
     compile_script(src_path, compiled_path)
 
-    if not compare:
-        return compiled_path
-
     if binary:
-        run_single(NUTCRACKER_PATH, "-cmp", original_path, compiled_path)
-        return
+        return compiled_path, original_path
 
     redecompiled_path = f"{tmp_path}/{module}.nut"
     decompile_script(compiled_path, redecompiled_path)
-    run_single("git", "diff", "--no-index", "--", src_path, redecompiled_path)
+    return src_path, redecompiled_path
+
+
+def git_diff(file1, file2, word_diff=False):
+    return run_single("git", "diff", "--no-index", f"--word-diff={'color' if word_diff else 'none'}", "--", file1, file2)
 
 
 def make_main(args):
@@ -199,45 +206,47 @@ def make_main(args):
 
 def script_main(args):
 
-    if args.d:
-        if args.r:
-            path = recompile_script(args.module, True, False)
-        else:
-            path = f"{SCRIPTS_ORIG}/{args.module}.nut.m"
-        run_single(NUTCRACKER_PATH, "-d", args.d, path)
-        return
-
     if args.bincmp:
-        recompile_script(args.module, True, True)
+        tmp_file = f"{TMP_ROOT}/cmp/{args.module}.{args.function_name}.nut"
+        tmp_file_r = f"{TMP_ROOT}/cmp/{args.module}.{args.function_name}.rec.nut"
+        recompiled_path, orig_path = recompile_script(args.module, True)
+        decompile_fun(orig_path, args.function_name, tmp_file)
+        decompile_fun(recompiled_path, args.function_name, tmp_file_r)
+        git_diff(tmp_file, tmp_file_r, True)
         return
 
     if args.cmp:
-        recompile_script(args.module, False, True)
+        src_path, redecompiled_path = recompile_script(args.module, False)
+        git_diff(src_path, redecompiled_path)
         return
+
+    if args.r:
+        path, _ = recompile_script(args.module, True)
+    else:
+        path = f"{SCRIPTS_ORIG}/{args.module}.nut.m"
+    decompile_fun(path, args.d)
+    return
+
 
 def man_script_main(args):
 
     if args.c and args.d and not args.r:
-        print("please specify folder for redecompiled scripts with -r <dir>")
+        print("please specify name for redecompiled script with -r <file>")
         return
 
     if args.c:
-        ensure_path(args.output_dir)
-        for scr_file in os.listdir(args.input_dir):
-            src_path = f"{args.input_dir}/{scr_file}"
-            dst_path = f"{args.output_dir}/{scr_file}.m"
-            compile_script(src_path, dst_path)
-        args.input_dir = args.output_dir
+        root_dir = os.path.split(args.output)[0]
+        ensure_path(root_dir)
+        compile_script(args.input, args.output)
+        args.input = args.output
 
     if args.r:
-        args.output_dir = args.r
+        args.output = args.r
 
     if args.d:
-        ensure_path(args.output_dir)
-        for scr_file in os.listdir(args.input_dir):
-            src_path = f"{args.input_dir}/{scr_file}"
-            dst_path = f"{args.output_dir}/{scr_file[:-2]}"  # remove .m
-            decompile_script(src_path, dst_path)
+        root_dir = os.path.split(args.output)[0]
+        ensure_path(root_dir)
+        decompile_script(args.input, args.output)
 
 
 def psb_main(args):
