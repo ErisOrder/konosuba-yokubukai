@@ -1,1 +1,6 @@
-script/out
+/script/out
+/venv/
+/build/
+/.idea/
+__pycache__
+
