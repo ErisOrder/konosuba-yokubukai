@@ -102,7 +102,7 @@ def decompile_psb(src, dst):
 
 def compile_script(src, dst):
     print(f"compiling {src}")
-    result = run_single(SQ_PATH, "-c", "-o", dst, src)
+    result = run_single(SQ_PATH, "-c", "-d", "-o", dst, src)
     if result:
         print(f"{src} compiled succesfully")
     else:

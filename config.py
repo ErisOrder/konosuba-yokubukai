@@ -51,7 +51,7 @@ SCRIPTS_WORKING = [
     "minigame",
     "motionpanel",
     "override",
-    "savesystem",       # ?
+    #"savesystem",       # ?
     "selectdialog",
     "sound",
     "spec",

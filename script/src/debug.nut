@@ -1,3 +1,31 @@
+function getPadKey(input = null) {
+	local inputkeys = [
+		2,
+		1,
+		1024,
+		2048,
+		4,
+		8,
+		512,
+		256,
+		65536,
+		131072,
+		64,
+		128,
+		32,
+		16
+	];
+    
+	foreach( key in inputkeys )
+	{
+		local press = input ? input.keyPressed(key) : this.checkKeyPressed(key);
+		if (press != 0)
+		{
+			return key;
+		}
+	}
+}
+
 class this.DialogWindow extends ::BasicLayer
 {
 	DEFAULT_AFX = "center";
@@ -495,58 +523,55 @@ function debugMenu( target, sel )
 	{
 	case 0:
 		sel = ::select([
-			"\x00e5\x00a4\x0089\x00e6\x0095\x00b0\x00e7\x00b7\x00a8\x00e9\x009b\x0086",
-			"\x00e3\x0082\x00b7\x00e3\x0082\x00b9\x00e3\x0083\x0086\x00e3\x0083\x00a0\x00e5\x00a4\x0089\x00e6\x0095\x00b0\x00e7\x00b7\x00a8\x00e9\x009b\x0086",
-			"\x00e3\x0082\x00b0\x00e3\x0083\x00ad\x00e3\x0083\x00bc\x00e3\x0083\x0090\x00e3\x0083\x00ab\x00e5\x00a4\x0089\x00e6\x0095\x00b0\x00e7\x00b7\x00a8\x00e9\x009b\x0086",
-			"\x00e5\x0085\x00a8\x00e9\x0091\x0091\x00e8\x00b3\x009e\x00e3\x0083\x0086\x00e3\x0082\x00b9\x00e3\x0083\x0088ON/OFF",
-			"\x00e5\x0085\x00a8\x00e3\x0082\x00b7\x00e3\x0083\x00bc\x00e3\x0083\x00b3\x00e3\x0083\x0095\x00e3\x0083\x00a9\x00e3\x0082\x00b0\x00e8\x00b5\x00b0\x00e6\x009f\x00bb",
-			"\x00e6\x009c\x00aa\x00e8\x00aa\x00ad\x00e7\x00a2\x00ba\x00e8\x00aa\x008d",
-			"\x00e4\x00bf\x009d\x00e5\x00ad\x0098\x00e3\x0083\x0087\x00e3\x0083\x00bc\x00e3\x0082\x00bf\x00e7\x00a0\x00b4\x00e5\x00a3\x008a",
-			"\x00e5\x00bc\x00b7\x00e5\x0088\x00b6\x00e5\x0085\x00a8\x00e3\x0082\x00bb\x00e3\x0083\x00bc\x00e3\x0083\x0096"
+            "Edit vars",
+            "Edit system vars",
+            "Edit global vars",
+            "Unlock all scenes",
+            "Parse save flags",
+            "Show unread scenes (console)",
+            "Break save data",
+            "Test save all",
 		], null, 32);
 
-		while (sel != null)
+		switch(sel)
 		{
-			switch(sel)
-			{
-			case 0:
-				::VariableEditWindow(target, ::baseScreen).open();
-				break;
+		case 0:
+			::VariableEditWindow(target, ::baseScreen).open();
+			break;
 
-			case 1:
-				local proxy = this.SystemVariableProxy(target);
-				::VariableEditWindow(proxy, ::baseScreen).open();
-				break;
+		case 1:
+			local proxy = this.SystemVariableProxy(target);
+			::VariableEditWindow(proxy, ::baseScreen).open();
+			break;
 
-			case 2:
-				local proxy = this.GlobalVariableProxy();
-				::VariableEditWindow(proxy, ::baseScreen).open();
-				throw this.GameStateException("tostart");
-				break;
+		case 2:
+			local proxy = this.GlobalVariableProxy();
+			::VariableEditWindow(proxy, ::baseScreen).open();
+			throw this.GameStateException("tostart");
+			break;
 
-			case 3:
-				::allSeen = !::allSeen;
-				throw this.GameStateException("tostart");
-				break;
+		case 3:
+			::allSeen = !::allSeen;
+			throw this.GameStateException("tostart");
+			break;
 
-			case 4:
-				target.parseSFlags();
-				throw this.GameStateException("tostart");
-				break;
+		case 4:
+			target.parseSFlags();
+			throw this.GameStateException("tostart");
+			break;
 
-			case 5:
-				target.showUnread();
-				throw this.GameStateException("tostart");
-				break;
+		case 5:
+			target.showUnread();
+			throw this.GameStateException("tostart");
+			break;
 
-			case 6:
-				target.breakSaveData();
-				break;
+		case 6:
+			target.breakSaveData();
+			break;
 
-			case 7:
-				target.testSaveAll();
-				break;
-			}
+		case 7:
+			target.testSaveAll();
+			break;
 		}
 
 		break;
@@ -572,27 +597,25 @@ function debugMenu( target, sel )
 
 	case 2:
 		sel = ::select([
-			"\x00e3\x0083\x00aa\x00e3\x0082\x00bd\x00e3\x0083\x00bc\x00e3\x0082\x00b9\x00e3\x0083\x00a1\x00e3\x0083\x00bc\x00e3\x0082\x00bf",
-			"\x00e3\x0083\x0087\x00e3\x0083\x0090\x00e3\x0083\x0083\x00e3\x0082\x00b0\x00e6\x0083\x0085\x00e5\x00a0\x00b1",
-			"\x00e3\x0083\x00aa\x00e3\x0083\x0093\x00e3\x0082\x00b8\x00e3\x0083\x00a7\x00e3\x0083\x00b3\x00e6\x0083\x0085\x00e5\x00a0\x00b1"
+			"Toggle resource meter",
+			"Toggle debug info",
+			"Toggle revision info"
 		], null, 32);
 
-		while (sel != null)
+
+		switch(sel)
 		{
-			switch(sel)
-			{
-			case 0:
-				this.System.setResourceMeter(!this.System.getResourceMeter());
-				break;
+		case 0:
+			this.System.setResourceMeter(!this.System.getResourceMeter());
+			break;
 
-			case 1:
-				this.toggleDebugInfo();
-				break;
+		case 1:
+			this.toggleDebugInfo();
+			break;
 
-			case 2:
-				this.toggleRevisionInfo();
-				break;
-			}
+		case 2:
+			this.toggleRevisionInfo();
+			break;
 		}
 
 		break;
