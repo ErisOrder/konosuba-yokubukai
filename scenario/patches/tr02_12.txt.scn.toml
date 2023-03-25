@@ -1,0 +1,15 @@
+# tr02_12.txt.scn
+
+[info]
+0 = ""
+
+[characters]
+
+[character_subs]
+
+[script]
+# lines: 0
+
+[selections]
+36 = "成功"
+35 = "失敗"

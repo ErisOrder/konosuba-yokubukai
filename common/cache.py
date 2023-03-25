@@ -42,8 +42,7 @@ class HashStorage(LoadableJson):
             paths = [paths]
 
         for p in paths:
-            file_md5 = get_md5(p)
-            self.state[p] = file_md5
+            self.state[p] = get_md5(p) 
 
     def check_changed(self, paths: str | list[str]):
         if type(paths) == str:
@@ -54,4 +53,6 @@ class HashStorage(LoadableJson):
                 return True
             else:
                 file_md5 = get_md5(p)
-                return file_md5 != self.state[p]
+                if file_md5 != self.state[p]:
+                    return True
+        return False

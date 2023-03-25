@@ -1,0 +1,38 @@
+# classlist.scn
+
+[info]
+
+[characters]
+
+[character_subs]
+
+[script]
+# lines: 0
+
+[strings]
+# count: 24
+
+10 = "layer"
+22 = "zlayer"
+23 = "スライド左"
+0 = ""
+5 = "character"
+4 = "bu"
+7 = "emotion"
+19 = "stage"
+20 = "stageex"
+15 = "normal"
+8 = "event"
+12 = "movie"
+13 = "msgwin"
+16 = "notrans"
+9 = "face_"
+21 = "start"
+2 = "bgm"
+14 = "music"
+17 = "se"
+11 = "loopse"
+18 = "sound"
+3 = "bgv"
+1 = "base"
+6 = "clayer"

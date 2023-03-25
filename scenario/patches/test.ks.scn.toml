@@ -1,0 +1,76 @@
+# test.ks.scn
+
+[info]
+0 = ""
+
+[characters]
+
+[character_subs]
+
+[script]
+# lines: 16
+
+# monologue
+# スキップ
+191 = "スキップ"
+
+# monologue
+# スキップ
+# 191 = "スキップ"
+
+# monologue
+# 証言ゲット
+204 = "証言ゲット"
+
+# monologue
+# 裁判カズマ
+203 = "裁判カズマ"
+
+# monologue
+# テスト
+192 = "テスト"
+
+# monologue
+# クリップテスト
+190 = "クリップテスト"
+
+# monologue
+# 表示
+202 = "表示"
+
+# monologue
+# 移動してみる
+200 = "移動してみる"
+
+# monologue
+# 戻す
+198 = "戻す"
+
+# monologue
+# 別パーツで右側準備
+195 = "別パーツで右側準備"
+
+# monologue
+# 上にカットインでのせる
+193 = "上にカットインでのせる"
+
+# monologue
+# 終了
+201 = "終了"
+
+# monologue
+# てすと
+185 = "てすと"
+
+# monologue
+# てすと
+# 185 = "てすと"
+
+# monologue
+# %fsyogen;証言フォント　赤
+10 = "%fsyogen;証言フォント　赤"
+
+# monologue
+# ギルド・ギルドカウンター付近
+189 = "ギルド・ギルドカウンター付近"
+

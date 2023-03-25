@@ -150,6 +150,14 @@ def decompile_script(src, dst):
         print(f"failed to decompile {src}")
 
 
+def patch_scn(orig_scn, toml_patch, dst):
+    print(f"patching {orig_scn}")
+    result = run_single(SCN_PATCHER_PATH, toml_patch, orig_scn, dst)
+    if result:
+        print(f"{orig_scn} patched succesfully")
+    else:
+        print(f"failed to patch {orig_scn}")
+
 def compile_scripts(whitelist: list[str]):
     print("compiling scripts...")
     tmp_path = f"{TMP_ROOT}/scripts"
@@ -178,8 +186,6 @@ def compile_scripts(whitelist: list[str]):
                 changed = True
         hash_store.update_file(out_path)
 
-    hash_store.save()
-
     if changed:
         ensure_path(FILES_ROOT)
         info_json = "script_info.psb.m.json"
@@ -188,7 +194,6 @@ def compile_scripts(whitelist: list[str]):
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
 def make_patch():
-
     # Process fonts
     print("packing fonts...")
     tmp_path = f"{TMP_ROOT}/patch"
@@ -211,6 +216,21 @@ def make_patch():
             hash_store.update_file(files)
             changed = True
 
+    # Patch scenarios 
+    print("patching scenarios...")
+    patched_scns = f"{tmp_path}/patch/scenario"
+    ensure_path(patched_scns)
+    for patch in os.listdir(SCN_PATCHES):
+        scn_name = patch.rsplit(".", maxsplit=1)[0]
+        scn_path = f"{SCN_ORIG}/{scn_name}.m"
+        patch_path = f"{SCN_PATCHES}/{patch}"
+        out_path = f"{patched_scns}/{scn_name}.m"
+        
+        files = [scn_path, patch_path, out_path]
+        if hash_store.check_changed(files):
+            patch_scn(scn_path, patch_path, out_path)
+            hash_store.update_file(files)
+            changed = True        
 
     # Pack all files into patch_body
     info_json = "patch_info.psb.m.json"

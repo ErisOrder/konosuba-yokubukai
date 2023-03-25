@@ -1,0 +1,35 @@
+# minigame.ks.scn
+
+[info]
+0 = ""
+
+[characters]
+
+[character_subs]
+
+[script]
+# lines: 4
+
+# monologue
+# ミニゲーム成功
+38 = "ミニゲーム成功"
+
+# monologue
+# ミニゲーム失敗
+37 = "ミニゲーム失敗"
+
+# monologue
+# ミニゲーム用データ変換
+39 = "ミニゲーム用データ変換"
+
+# monologue
+# 完了
+41 = "完了"
+
+[selections]
+35 = "ミニゲーム1"
+36 = "ミニゲーム2"
+42 = "成功"
+40 = "失敗"
+# 42 = "成功"
+# 40 = "失敗"

@@ -3,7 +3,7 @@ This repo oriented to assist translation of `Konosuba: Kono Yokubukai Game ni Sh
 
 If you want help or can provide english translation, please write an issue
 
-# Building
+## Building
 Run `python make.py make -xd`
 
 `-x` option to build scripts
@@ -12,9 +12,9 @@ Run `python make.py make -xd`
 
 Built mod will be in `build`
 
-# Data manipulation
+## Data manipulation
 
-## PSB
+### PSB
 PSB Key: 
 
     38757621acf82
@@ -27,7 +27,7 @@ PSB decompiling:
 
     python make.py man psb -d <name>_info.psb.m <out_folder>
 
-## Script
+### Script
 Script compiling:
 
     python make.py man script -c <src.nut> <out.nut.m>
@@ -43,13 +43,19 @@ Script compare:
 
 compare requires installed git
 
-## Font 
+### Font 
 Individual font files extracted from `font_body.bin`
 
 Font pack:
 
     python make.py man font -c <name>_info.psb.m.json <out_folder>
 
-PSB decompiling:
+Font extract:
 
     python make.py man font -d <name>.psb.m <out_folder>
+
+## Tools
+- [scn-tool](https://github.com/storycraft/scn-tool)
+- [FreeMote Toolkit](https://github.com/UlyssesWu/FreeMote)
+- [NutCracker](https://github.com/nikvoid/NutCracker/tree/squirrel-32bit)
+- [Squirrel 2.24 32bit compiler](http://squirrel-lang.org/)
