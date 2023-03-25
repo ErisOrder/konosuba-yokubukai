@@ -187,10 +187,12 @@ def compile_scripts(whitelist: list[str]):
         shutil.copy(f"{SCRIPT_JSON}/script_info.psb.m.resx.json", tmp_path)
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
-def make_fonts():
+def make_patch():
+
+    # Process fonts
     print("packing fonts...")
-    tmp_path = f"{TMP_ROOT}/font"
-    fonts_path = f"{tmp_path}/font"
+    tmp_path = f"{TMP_ROOT}/patch"
+    fonts_path = f"{tmp_path}/patch/font"
     
     ensure_path(fonts_path)
 
@@ -209,11 +211,13 @@ def make_fonts():
             hash_store.update_file(files)
             changed = True
 
-    info_json = "font_info.psb.m.json"
-    info_src = f"{FONT_SRC}/{info_json}"
-    resx = f"{FONT_SRC}/font_info.psb.m.resx.json"
+
+    # Pack all files into patch_body
+    info_json = "patch_info.psb.m.json"
+    info_src = f"{PATCH_SRC}/{info_json}"
+    resx = f"{PATCH_SRC}/patch_info.psb.m.resx.json"
     
-    files = [info_src, resx, f"{FILES_ROOT}/font_info.psb.m", f"{FILES_ROOT}/font_body.bin"]
+    files = [info_src, resx, f"{FILES_ROOT}/patch_info.psb.m", f"{FILES_ROOT}/patch_body.bin"]
     if hash_store.check_changed(files):
         changed = True
         
@@ -274,7 +278,7 @@ def make_main(args):
         compile_scripts(whitelist)
 
     if args.d:
-        make_fonts()
+        make_patch()
 
     hash_store.save()
 

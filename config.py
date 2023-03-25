@@ -17,6 +17,7 @@ SCRIPTS_SRC = "script/src"
 SCRIPT_JSON = "script/psb-json"
 
 FONT_SRC = "font"
+PATCH_SRC = "patch-stub"
 
 SCRIPTS_WHITELIST = [
 

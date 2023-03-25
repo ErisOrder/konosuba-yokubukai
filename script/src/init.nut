@@ -88,6 +88,7 @@ if (this.init != null)
 		{
 			this.mountArchive(name, value);
 		}
+		this.mountArchive("patch", "");
 	}
 
 	if (this.BASEWIDTH <= 640 && "screenShotSD" in this.init.root)
