@@ -1,3 +1,8 @@
+# Project
+This repo oriented to assist translation of `Konosuba: Kono Yokubukai Game ni Shinpan o!`
+
+If you want help or can provide english translation, please write an issue
+
 # Building
 Run `python make.py make -xd`
 
@@ -37,3 +42,14 @@ Script compare:
     python make.py script --bincmp <module> <function>
 
 compare requires installed git
+
+## Font 
+Individual font files extracted from `font_body.bin`
+
+Font pack:
+
+    python make.py man font -c <name>_info.psb.m.json <out_folder>
+
+PSB decompiling:
+
+    python make.py man font -d <name>.psb.m <out_folder>

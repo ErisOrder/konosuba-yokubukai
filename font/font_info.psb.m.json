@@ -1,0 +1,14 @@
+{
+  "expire_suffix_list": [".psb.m"],
+  "file_info": {
+    "seuratfont54": [0,1799299],
+    "textfont12": [1799299,285842],
+    "textfont36": [2085141,1133818],
+    "textfont52": [3218959,1759294],
+    "textfont54": [4978253,1773623],
+    "textfont60": [6751876,1989519],
+    "textfont60red": [8741395,2351390]
+  },
+  "id": "archive",
+  "version": 1.0
+}

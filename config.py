@@ -16,6 +16,8 @@ SCRIPTS_ORIG = "script/original"
 SCRIPTS_SRC = "script/src"
 SCRIPT_JSON = "script/psb-json"
 
+FONT_SRC = "font"
+
 SCRIPTS_WHITELIST = [
 
 ]

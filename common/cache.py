@@ -37,13 +37,21 @@ class HashStorage(LoadableJson):
     def __init__(self, storage_file):
         super().__init__(storage_file, {})
 
-    def update_file(self, path):
-        file_md5 = get_md5(path)
-        self.state[path] = file_md5
+    def update_file(self, paths: str | list[str]):
+        if type(paths) == str:
+            paths = [paths]
 
-    def check_changed(self, path):
-        if not os.path.exists(path) or path not in self.state:
-            return True
-        else:
-            file_md5 = get_md5(path)
-            return file_md5 != self.state[path]
+        for p in paths:
+            file_md5 = get_md5(p)
+            self.state[p] = file_md5
+
+    def check_changed(self, paths: str | list[str]):
+        if type(paths) == str:
+            paths = [paths]
+
+        for p in paths:
+            if not os.path.exists(p) or p not in self.state:
+                return True
+            else:
+                file_md5 = get_md5(p)
+                return file_md5 != self.state[p]

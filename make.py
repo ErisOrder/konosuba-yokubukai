@@ -33,7 +33,13 @@ parser_psb = man_subparsers.add_parser("psb", help="manipulate psb")
 parser_psb.add_argument("input", type=str, help="input json or binary")
 parser_psb.add_argument("output", type=str, help="output folder or binary")
 parser_psb.add_argument("-c", action="store_true", help="compile (build)")
-parser_psb.add_argument("-d", action="store_true", help="decompile (build)")
+parser_psb.add_argument("-d", action="store_true", help="decompile (extract)")
+
+parser_font = man_subparsers.add_parser("font", help="manipulate font files (psb.m)")
+parser_font.add_argument("input", type=str, help="input json or binary")
+parser_font.add_argument("output", type=str, help="output folder or binary")
+parser_font.add_argument("-c", action="store_true", help="pack")
+parser_font.add_argument("-d", action="store_true", help="extract")
 
 parser_man_script = man_subparsers.add_parser("script", help="manipulate scripts")
 parser_man_script.add_argument("input", type=str, help="input source or binary file")
@@ -99,6 +105,32 @@ def decompile_psb(src, dst):
     else:
         print(f"failed to decompile {src}")
 
+def extract_font(src, dst):
+    print(f"extracting {src}")
+    result = run_single(PSB_DECOMPILE_PATH, src)
+    if result:
+        root_dir = os.path.split(src)[0]
+        psb_name = os.path.split(src)[1].split(".")[0]        
+        files_to_move = [
+            f"{psb_name}.psb",
+            f"{psb_name}.psb.m.json",
+            f"{psb_name}.psb.m.resx.json"
+        ]
+        for file in files_to_move:
+            shutil.move(f"{root_dir}/{file}", f"{dst}/{file}")
+        print(f"{src} extracted succesfully")
+    else:
+        print(f"failed to extract {src}")
+
+def pack_font(src, dst):
+    print(f"packing {src}")
+    result = run_single(PSB_BUILD_PATH, src)
+    if result:
+        psb_name = os.path.split(src)[1].split(".")[0]        
+        shutil.move(f"{psb_name}.psb.m.pure.psb", f"{dst}/{psb_name}.psb.m")
+        print(f"{src} packed succesfully")
+    else:
+        print(f"failed to pack {src}")
 
 def compile_script(src, dst):
     print(f"compiling {src}")
@@ -155,6 +187,42 @@ def compile_scripts(whitelist: list[str]):
         shutil.copy(f"{SCRIPT_JSON}/script_info.psb.m.resx.json", tmp_path)
         build_psb(f"{tmp_path}/{info_json}", f"{FILES_ROOT}")
 
+def make_fonts():
+    print("packing fonts...")
+    tmp_path = f"{TMP_ROOT}/font"
+    fonts_path = f"{tmp_path}/font"
+    
+    ensure_path(fonts_path)
+
+    changed = False
+    fonts_src = f"{FONT_SRC}/font"
+    for font_json in [f for f in os.listdir(fonts_src) if f.endswith(".m.json")]:
+        psb_name = font_json.split(".")[0]
+        font_json = f"{fonts_src}/{font_json}"
+        resx = f"{fonts_src}/{psb_name}.psb.m.resx.json"
+        atlas_path = f"{fonts_src}/{psb_name}.psb"
+        atlases = [f"{atlas_path}/{a}" for a in os.listdir(atlas_path)]
+
+        files = [resx, font_json] + atlases
+        if hash_store.check_changed(files):
+            pack_font(font_json, fonts_path)
+            hash_store.update_file(files)
+            changed = True
+
+    info_json = "font_info.psb.m.json"
+    info_src = f"{FONT_SRC}/{info_json}"
+    resx = f"{FONT_SRC}/font_info.psb.m.resx.json"
+    
+    files = [info_src, resx, f"{FILES_ROOT}/font_info.psb.m", f"{FILES_ROOT}/font_body.bin"]
+    if hash_store.check_changed(files):
+        changed = True
+        
+    if changed:
+        ensure_path(FILES_ROOT)
+        shutil.copy(info_src, tmp_path)
+        shutil.copy(resx, tmp_path)
+        build_psb(f"{tmp_path}/{info_json}", FILES_ROOT)
+        hash_store.update_file(files)
 
 def decompile_fun(binary_path, func, out=None):
     if out:
@@ -204,6 +272,9 @@ def make_main(args):
         if args.A:
             whitelist = SCRIPTS_WORKING
         compile_scripts(whitelist)
+
+    if args.d:
+        make_fonts()
 
     hash_store.save()
 
@@ -272,12 +343,27 @@ def psb_main(args):
         build_psb(args.input, args.output)
         return
 
+def font_main(args):
+    if args.c and args.d:
+        print("choose one action")
+        return
+    
+    ensure_path(args.output)
+
+    if args.d:
+        extract_font(args.input, args.output)
+        return
+    
+    if args.c:
+        pack_font(args.input, args.output)
+        return    
 
 if __name__ == "__main__":
     parser_make.set_defaults(func=make_main)
     parser_script.set_defaults(func=script_main)
     parser_man_script.set_defaults(func=man_script_main)
     parser_psb.set_defaults(func=psb_main)
+    parser_font.set_defaults(func=font_main)
     argss = parser.parse_args()
     if "func" not in argss:
         parser.print_help()

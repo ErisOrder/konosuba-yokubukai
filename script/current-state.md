@@ -41,7 +41,7 @@ ok    | basicrender   |                                                         
 ok    | basictext     |                                                               |
 ok    | confirmdialog |                                                               |
 ok    | debug         | might need fixes                                              |
-ok    | dmmauth       |                                                               |
+ok    | dmmauth       | DRM check located here                                        |
 ok    | doublepicture |                                                               |
 ok    | envenv        |                                                               |
 bad   | envplayer     | cannot load game                                              | window stuck
